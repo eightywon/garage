@@ -1,6 +1,6 @@
 <?php
  if ($_POST["p1"]=="interval") {
-  if (shell_exec("/usr/bin/gpio read 0")==1) {
+  if (shell_exec("/usr/bin/gpio read 0")==0) {
    echo "CLOSED";
   } else {
    echo "OPEN";
@@ -11,7 +11,7 @@
   shell_exec("/usr/bin/gpio write 1 0");
   usleep(500000);
   shell_exec("/usr/bin/gpio write 1 1");
-  sleep(10);
+  sleep(15);
   echo("good");
   exit;
  }
@@ -65,7 +65,7 @@
  </head>
  <body>
   <?php
-   if (shell_exec("/usr/bin/gpio read 0")==1) {
+   if (shell_exec("/usr/bin/gpio read 0")==0) {
     $val="Open Door";
    } else {
     $val="Close Door";
