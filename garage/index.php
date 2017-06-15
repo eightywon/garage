@@ -3,7 +3,7 @@
  $payload=file_get_contents("php://input");
  $data=@json_decode($payload,true);
  $dtstring=date('m/d/y \a\t G:i:s',$data['tst']);
- if (shell_exec("/usr/bin/gpio read 0")==1) {
+ if (shell_exec("/usr/bin/gpio read 0")==0) {
   $status="C";
  } else {
   $status="O";
