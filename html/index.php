@@ -14,6 +14,47 @@
   sleep(15);
   echo("good");
   exit;
+ } else if ($_POST["p1"]=="mirror") {
+  if ($_POST["p2"]=="close") {
+   //mirror has requested we close the garage. is it currently open?
+   if (shell_exec("/usr/bin/gpio read 0")==1) {
+    //it's open, let's try to close and return the result
+    shell_exec("/usr/bin/gpio mode 1 out");
+    shell_exec("/usr/bin/gpio write 1 0");
+    usleep(500000);
+    shell_exec("/usr/bin/gpio write 1 1");
+    sleep(15);
+    if (shell_exec("/usr/bin/gpio read 0")==0) {
+     echo("The garage door is now closed.");
+    } else {
+     echo("Something went wrong. The garage door is still open.");
+    }
+    exit;
+   } else if (shell_exec("/usr/bin/gpio read 0")==0) {
+    echo("The garage door is already closed.");
+    exit;
+   }
+  }
+  else if ($_POST["p2"]=="open") {
+   //mirror has requested we open the garage. is it currently closed?
+   if (shell_exec("/usr/bin/gpio read 0")==0) {
+    //it's closed, let's try to open and return the result
+    shell_exec("/usr/bin/gpio mode 1 out");
+    shell_exec("/usr/bin/gpio write 1 0");
+    usleep(500000);
+    shell_exec("/usr/bin/gpio write 1 1");
+    sleep(15);
+    if (shell_exec("/usr/bin/gpio read 0")==1) {
+     echo("The garage door is now open.");
+    } else {
+     echo("Something went wrong. The garage door did not open.");
+    }
+    exit;
+   } else if (shell_exec("/usr/bin/gpio read 0")==1) {
+    echo("The garage door is already open.");
+    exit;
+   }
+  }
  }
 ?>
 <html>
@@ -24,7 +65,7 @@
   </script>
   <script>
    $(function() {
-    $('#toggle').click(function() {
+    $('#toggle,#togglehref').click(function() {
      var obj=document.getElementById('toggle');
      if (obj.value=="Open Door") {
       obj.value="Opening...";
